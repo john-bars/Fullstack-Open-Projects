@@ -1,10 +1,10 @@
-const Header = (props) => {
-  return <h1>{props.course.name}</h1>;
+const Header = ({ course }) => {
+  return <h1>{course.name}</h1>;
 };
 
-const Content = (props) => {
-  // console.log(props);
-  const content = props.parts.map((part) => (
+const Content = ({ parts }) => {
+  // console.log(parts);
+  const content = parts.map((part) => (
     <p>
       {" "}
       {part.name} {part.exercises}{" "}
@@ -13,14 +13,14 @@ const Content = (props) => {
   return content;
 };
 
-const Total = (props) => {
+const Total = ({ parts }) => {
   let sum = 0;
-  const exercisesArray = props.parts.map((part) => part.exercises);
+  const exercisesArray = parts.map((part) => part.exercises);
   // console.log(exercisesArray);
   exercisesArray.forEach((num) => {
     sum += num;
   });
-  // console.log(sum);
+  // console.log("The sum is: " + sum);
   return <p>Number of exercises: {sum}</p>;
 };
 
