@@ -1,0 +1,12 @@
+sequenceDiagram
+    user
+    participant browser
+    participant server
+
+user->>browser: input and submit new note in the form element.
+browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+activate server
+server: saves the new note as JSON data.
+server-->>browser: return (201 status code) and the JSON data.
+deactivate server
+browser: use the JavaScript file from the initial GET request (before the POST request is made) and the JSON data from the server to display/render the new note.
