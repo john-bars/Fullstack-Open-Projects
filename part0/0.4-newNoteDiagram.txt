@@ -24,7 +24,7 @@ browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
 activate server
 server-->>browser: return JavaScript file
 deactivate server
-browser: executes Javascript code that fetches JSON
+browser: executes Javascript code that fetches JSON data from the server and adds HTML element.
 
 browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
 activate server
