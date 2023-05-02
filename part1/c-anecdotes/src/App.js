@@ -19,7 +19,12 @@ const App = () => {
   const [selected, setSelected] = useState(0);
   const [points, setPoints] = useState([0, 0, 0, 0, 0, 0, 0, 0]);
   const copy = [...points];
-  console.log("annecdote array index number:", selected);
+  const max = Math.max.apply(null, copy);
+  const indexWithMaxValue = copy.indexOf(max);
+  // console.log(copy);
+  // console.log("max = ", max);
+  console.log("index: ", copy.indexOf(max), "; max value: ", max);
+  console.log("current annecdote index number:", selected);
 
   const getRandomInt = (max) => {
     return Math.floor(Math.random() * max);
@@ -34,16 +39,24 @@ const App = () => {
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <p>{anecdotes[selected]}</p>
       <p>has {copy[selected]} votes. </p>
       <Button handleClick={vote} text="vote" />
-      <button
-        onClick={() => {
-          setSelected(getRandomInt(8));
-        }}
-      >
+      <button onClick={() => setSelected(getRandomInt(8))}>
         Next Anecdote
       </button>
+      <h1>Anecdote with most votes</h1>
+      {/* { if (max === 0) { return (
+        <p>No vote available</p>
+      ) } return (
+        <p>{anecdotes[indexWithMaxValue]}</p>
+      )} */}
+      {max === 0 ? (
+        <p>No vote has been made. Please cast a vote.</p>
+      ) : (
+        <p>{anecdotes[indexWithMaxValue]}</p>
+      )}
     </div>
   );
 };
