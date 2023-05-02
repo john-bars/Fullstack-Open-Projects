@@ -1,5 +1,9 @@
 import { useState } from "react";
 
+const Button = ({ handleClick, text }) => (
+  <button onClick={handleClick}>{text}</button>
+);
+
 const App = () => {
   const anecdotes = [
     "If it hurts, do it more often.",
@@ -13,14 +17,31 @@ const App = () => {
   ];
 
   const [selected, setSelected] = useState(0);
+  const [points, setPoints] = useState([0, 0, 0, 0, 0, 0, 0, 0]);
+  const copy = [...points];
+  console.log("annecdote array index number:", selected);
+
   const getRandomInt = (max) => {
     return Math.floor(Math.random() * max);
+  };
+
+  const vote = () => {
+    console.log("previous value", copy);
+    copy[selected] += 1;
+    setPoints(copy);
+    console.log("new value: ", copy);
   };
 
   return (
     <div>
       <p>{anecdotes[selected]}</p>
-      <button onClick={() => setSelected(getRandomInt(8))}>
+      <p>has {copy[selected]} votes. </p>
+      <Button handleClick={vote} text="vote" />
+      <button
+        onClick={() => {
+          setSelected(getRandomInt(8));
+        }}
+      >
         Next Anecdote
       </button>
     </div>
