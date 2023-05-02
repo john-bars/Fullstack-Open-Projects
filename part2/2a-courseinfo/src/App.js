@@ -25,16 +25,14 @@ const Part = ({ part }) => (
   </p>
 );
 
-// const Total = ({ sum }) => <p>Number of exercises {sum}</p>;
-
 const Total = ({ parts }) => {
-  let sumOfExercises = 0;
   const exercisesArray = parts.map((part) => part.exercises);
-  console.log(exercisesArray);
-  exercisesArray.forEach((num) => {
-    sumOfExercises += num;
+  console.log("exercise array:", exercisesArray);
+  const sumOfExercises = exercisesArray.reduce((total, num) => {
+    console.log(total, num);
+    return total + num;
   });
-  console.log("The sum of exercises is: ", sumOfExercises);
+  console.log("sum of exercises: ", sumOfExercises);
   return (
     <p>
       <b>total of {sumOfExercises} exercises</b>
