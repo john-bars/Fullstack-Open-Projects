@@ -3,18 +3,19 @@ import { useState } from "react";
 const App = () => {
   const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
   const [newName, setNewName] = useState("");
-  // const copy = [...persons];
+  const match = persons.some((person) => person.name === newName.trim());
 
   const addName = (e) => {
     e.preventDefault();
-    const name = { name: newName };
-    setPersons(persons.concat(name));
-    console.log(persons);
-    setNewName("");
+    // console.log("match: ", match);
+    // console.log("persons: ", persons);
+    match
+      ? window.alert(`${newName} is already added to the phonebook.`)
+      : setPersons(persons.concat({ name: newName.trim() }));
   };
 
   const handleChange = (e) => {
-    console.log("new name: ", e.target.value);
+    // console.log("input: ", e.target.value);
     setNewName(e.target.value);
   };
 
@@ -32,7 +33,7 @@ const App = () => {
       <h2>Numbers</h2>
       <div>
         {persons.map((person) => (
-          <p>{person.name}</p>
+          <p key={person.name}>{person.name}</p>
         ))}
       </div>
     </div>
