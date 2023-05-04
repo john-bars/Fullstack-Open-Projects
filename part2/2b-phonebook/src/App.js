@@ -8,15 +8,24 @@ const App = () => {
     { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
   ]);
   const [newName, setNewName] = useState("");
-  const match = persons.some((person) => person.name === newName.name);
+  const [filteredNames, setFilteredNames] = useState();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setNewName({ ...newName, [name]: value.trim() });
   };
 
+  const filter = (e) => {
+    const match = persons.filter((person) =>
+      person.name.toLowerCase().includes(e.target.value)
+    );
+    setFilteredNames(match);
+    // console.log("filtered names: ", filteredNames);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    const match = persons.some((person) => person.name === newName.name);
     const newNameObject = {
       name: newName.name,
       number: newName.number,
@@ -30,6 +39,11 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <form>
+        <p>
+          filter shown with: <input type="text" onChange={filter} />
+        </p>
+      </form>
       <form onSubmit={handleSubmit}>
         <div>
           <p>
@@ -45,11 +59,17 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <div>
-        {persons.map((person) => (
-          <p key={person.id}>
-            {person.name} {person.number}
-          </p>
-        ))}
+        {!filteredNames
+          ? persons.map((person) => (
+              <p key={person.id}>
+                {person.name} {person.number}
+              </p>
+            ))
+          : filteredNames.map((person) => (
+              <p key={person.id}>
+                {person.name} {person.number}
+              </p>
+            ))}
       </div>
     </div>
   );
