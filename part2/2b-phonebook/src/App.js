@@ -8,33 +8,32 @@ const App = () => {
     { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
   ]);
   const [newName, setNewName] = useState("");
-  const [filteredNames, setFilteredNames] = useState();
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setNewName({ ...newName, [name]: value.trim() });
-  };
+  const [newNumber, setNewNumber] = useState("");
+  const [filterInput, setFilterInput] = useState("");
+  const [filteredNames, setFilteredNames] = useState({});
 
   const filter = (e) => {
+    setFilterInput(e.target.value);
     const match = persons.filter((person) =>
       person.name.toLowerCase().includes(e.target.value)
     );
     setFilteredNames(match);
-    // console.log("filtered names: ", filteredNames);
   };
 
-  const handleSubmit = (e) => {
+  function handleSubmit(e) {
+    const match = persons.some((person) => person.name === newName.trim());
     e.preventDefault();
-    const match = persons.some((person) => person.name === newName.name);
-    const newNameObject = {
-      name: newName.name,
-      number: newName.number,
+    const newContact = {
+      name: newName.trim(),
+      number: newNumber,
       id: persons.length + 1,
     };
     match
-      ? window.alert(`${newName.name} is already added to the phonebook.`)
-      : setPersons(persons.concat(newNameObject));
-  };
+      ? window.alert(`${newName} is already added to the phonebook.`)
+      : setPersons(persons.concat(newContact));
+    setNewName("");
+    setNewNumber("");
+  }
 
   return (
     <div>
@@ -47,10 +46,22 @@ const App = () => {
       <form onSubmit={handleSubmit}>
         <div>
           <p>
-            name: <input type="text" name="name" onChange={handleChange} />
+            name:{" "}
+            <input
+              type="text"
+              required
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+            />
           </p>
           <p>
-            number: <input type="tel" name="number" onChange={handleChange} />
+            number:{" "}
+            <input
+              type="tel"
+              required
+              value={newNumber}
+              onChange={(e) => setNewNumber(e.target.value)}
+            />
           </p>
         </div>
         <div>
@@ -59,7 +70,7 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <div>
-        {!filteredNames
+        {filterInput === ""
           ? persons.map((person) => (
               <p key={person.id}>
                 {person.name} {person.number}
