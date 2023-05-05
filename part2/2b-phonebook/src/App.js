@@ -1,4 +1,7 @@
 import { useState } from "react";
+import Filter from "./components/Filter";
+import PersonForm from "./components/PersonForm";
+import Persons from "./components/Persons";
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -7,7 +10,6 @@ const App = () => {
     { name: "Dan Abramov", number: "12-43-234345", id: 3 },
     { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
   ]);
-  console.log(persons.length);
   const [newContact, setNewContact] = useState({
     name: "",
     number: "",
@@ -52,52 +54,20 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <form>
-        <p>
-          filter shown with: <input type="text" onChange={filter} />
-        </p>
-      </form>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <p>
-            name:{" "}
-            <input
-              type="text"
-              required
-              name="name"
-              value={name}
-              onChange={handleChange}
-            />
-          </p>
-          <p>
-            number:{" "}
-            <input
-              type="tel"
-              required
-              name="number"
-              value={number}
-              onChange={handleChange}
-            />
-          </p>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      <div>
-        {filterInput === ""
-          ? persons.map((person) => (
-              <p key={person.id}>
-                {person.name} {person.number} {person.id}
-              </p>
-            ))
-          : filteredNames.map((person) => (
-              <p key={person.id}>
-                {person.name} {person.number} {person.id}
-              </p>
-            ))}
-      </div>
+      <Filter onChange={filter} />
+      <h3>Add a new</h3>
+      <PersonForm
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+        name={name}
+        number={number}
+      />
+      <h3>Numbers</h3>
+      <Persons
+        filterInput={filterInput}
+        filteredNames={filteredNames}
+        persons={persons}
+      />
     </div>
   );
 };
