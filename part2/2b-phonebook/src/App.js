@@ -7,10 +7,14 @@ const App = () => {
     { name: "Dan Abramov", number: "12-43-234345", id: 3 },
     { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
   ]);
-  const [newName, setNewName] = useState("");
-  const [newNumber, setNewNumber] = useState("");
+  console.log(persons.length);
+  const [newContact, setNewContact] = useState({
+    name: "",
+    number: "",
+  });
+  const { name, number } = newContact;
   const [filterInput, setFilterInput] = useState("");
-  const [filteredNames, setFilteredNames] = useState({});
+  const [filteredNames, setFilteredNames] = useState([]);
 
   const filter = (e) => {
     setFilterInput(e.target.value);
@@ -20,20 +24,30 @@ const App = () => {
     setFilteredNames(match);
   };
 
-  function handleSubmit(e) {
-    const match = persons.some((person) => person.name === newName.trim());
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setNewContact({ ...newContact, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const newContact = {
-      name: newName.trim(),
-      number: newNumber,
-      id: persons.length + 1,
-    };
-    match
-      ? window.alert(`${newName} is already added to the phonebook.`)
-      : setPersons(persons.concat(newContact));
-    setNewName("");
-    setNewNumber("");
-  }
+    const match = persons.some(
+      (person) => person.name === newContact.name.trim()
+    );
+    if (match) {
+      window.alert(`${newContact.name} is already added to the phonebook.`);
+    } else {
+      setPersons(
+        persons.concat({
+          name: newContact.name.trim(),
+          number: newContact.number.trim(),
+          id: persons.length + 1,
+        })
+      );
+      newContact.name = "";
+      newContact.number = "";
+    }
+  };
 
   return (
     <div>
@@ -50,8 +64,9 @@ const App = () => {
             <input
               type="text"
               required
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
+              name="name"
+              value={name}
+              onChange={handleChange}
             />
           </p>
           <p>
@@ -59,8 +74,9 @@ const App = () => {
             <input
               type="tel"
               required
-              value={newNumber}
-              onChange={(e) => setNewNumber(e.target.value)}
+              name="number"
+              value={number}
+              onChange={handleChange}
             />
           </p>
         </div>
@@ -73,12 +89,12 @@ const App = () => {
         {filterInput === ""
           ? persons.map((person) => (
               <p key={person.id}>
-                {person.name} {person.number}
+                {person.name} {person.number} {person.id}
               </p>
             ))
           : filteredNames.map((person) => (
               <p key={person.id}>
-                {person.name} {person.number}
+                {person.name} {person.number} {person.id}
               </p>
             ))}
       </div>
