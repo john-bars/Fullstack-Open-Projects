@@ -13,5 +13,9 @@ const update = (id, newObject) => {
   return axios.put(`${baseUrl}/${id}`, newObject).then((res) => res.data);
 };
 
-const phoneBookService = { getAll, create, update };
+const remove = (id) => {
+  return axios.delete(`${baseUrl}/${id}`);
+};
+
+const phoneBookService = { getAll, create, update, remove };
 export default phoneBookService;
