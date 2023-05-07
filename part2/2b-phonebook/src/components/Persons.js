@@ -2,10 +2,10 @@ import phoneBookService from "../services/persons";
 
 const Persons = ({ filterInput, filteredNames, persons, setPersons }) => {
   const handleDelete = (person) => {
-    console.log("person: ", person);
-    phoneBookService
-      .remove(person.id)
-      .then(() => phoneBookService.getAll().then((res) => setPersons(res)));
+    window.confirm(`Delete ${person.name}?`) &&
+      phoneBookService
+        .remove(person.id)
+        .then(() => phoneBookService.getAll().then((res) => setPersons(res)));
   };
 
   return (
