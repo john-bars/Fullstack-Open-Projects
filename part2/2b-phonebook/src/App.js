@@ -6,11 +6,11 @@ import Persons from "./components/Persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
-  const [newContact, setNewContact] = useState({
+  const [newName, setNewName] = useState({
     name: "",
     number: "",
   });
-  const { name, number } = newContact;
+  const { name, number } = newName; // destructure the newName
   const [filterInput, setFilterInput] = useState("");
   const [filteredNames, setFilteredNames] = useState([]);
 
@@ -18,40 +18,56 @@ const App = () => {
     phoneBookService.getAll().then((initialData) => setPersons(initialData));
   }, []);
 
-  const filter = (e) => {
-    setFilterInput(e.target.value);
+  useEffect(() => {
     const match = persons.filter((person) =>
-      person.name.toLowerCase().includes(e.target.value)
+      person.name.toLowerCase().includes(filterInput.toLowerCase())
     );
     setFilteredNames(match);
-  };
+  }, [persons, filterInput]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setNewContact({ ...newContact, [name]: value });
+    setNewName({ ...newName, [name]: value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const match = persons.some(
-      (person) => person.name === newContact.name.trim()
+
+    const matchItem = persons.find(
+      (person) => person.name.toLowerCase().trim() === name.toLowerCase().trim()
     );
-    if (match) {
-      window.alert(`${newContact.name} is already added to the phonebook.`);
+
+    const newContactInput = {
+      name: name.trim(),
+      number: number.trim(),
+    };
+
+    if (matchItem) {
+      window.confirm(
+        `${name.trim()} is already added to the phonebook. Do you want to replace the old number with ${number}?`
+      ) &&
+        phoneBookService
+          .update(matchItem.id, newContactInput)
+          .then((res) =>
+            setPersons(
+              persons.map((person) =>
+                person.id !== matchItem.id ? person : res
+              )
+            )
+          )
+          .then(setNewName({ name: "", number: "" }));
     } else {
       phoneBookService
-        .create(newContact)
-        .then((res) => setPersons(persons.concat(res)));
-      setNewContact({ name: "", number: "" });
-      // newContact.name = "";
-      // newContact.number = "";
+        .create(newContactInput)
+        .then((res) => setPersons(persons.concat(res)))
+        .then(setNewName({ name: "", number: "" }));
     }
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter onChange={filter} />
+      <Filter onChange={(e) => setFilterInput(e.target.value)} />
       <h3>Add a new</h3>
       <PersonForm
         handleChange={handleChange}
@@ -64,6 +80,7 @@ const App = () => {
         filterInput={filterInput}
         filteredNames={filteredNames}
         persons={persons}
+        setPersons={setPersons}
       />
     </div>
   );
