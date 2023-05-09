@@ -14,7 +14,12 @@ const App = () => {
   const { name, number } = newName; // destructure the newName
   const [filterInput, setFilterInput] = useState("");
   const [filteredNames, setFilteredNames] = useState([]);
-  const [successMessage, setSuccessMessage] = useState(null);
+  const [message, setMessage] = useState({
+    success: null,
+    error: null,
+  });
+  // const [successMessage, setSuccessMessage] = useState(null);
+  // const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     phoneBookService.getAll().then((initialData) => setPersons(initialData));
@@ -58,17 +63,30 @@ const App = () => {
             )
           )
           .then(
-            setSuccessMessage(`Updated ${newContactInput.name}'s number`),
-            setTimeout(() => setSuccessMessage(null), 5000)
+            setMessage({
+              ...message,
+              success: `Updated ${newContactInput.name}'s number`,
+            }),
+            setTimeout(() => setMessage(null), 5000)
           )
-          .then(setNewName({ name: "", number: "" }));
+          .then(setNewName({ name: "", number: "" }))
+
+          .catch(
+            setMessage({
+              ...message,
+              error: `Information of ${newContactInput.name} has already been removed from the server.`,
+            }),
+            setTimeout(() => setMessage(null), 5000),
+            phoneBookService.getAll().then((res) => setPersons(res)),
+            setNewName({ name: "", number: "" })
+          );
     } else {
       phoneBookService
         .create(newContactInput)
         .then((res) => setPersons(persons.concat(res)))
         .then(
-          setSuccessMessage(`Added ${newContactInput.name}`),
-          setTimeout(() => setSuccessMessage(null), 5000)
+          setMessage({ ...message, success: `Added ${newContactInput.name}` }),
+          setTimeout(() => setMessage(null), 5000)
         )
         .then(setNewName({ name: "", number: "" }));
     }
@@ -77,7 +95,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={successMessage} />
+      <Notification message={message} />
       <Filter onChange={(e) => setFilterInput(e.target.value)} />
       <h3>Add a new</h3>
       <PersonForm
