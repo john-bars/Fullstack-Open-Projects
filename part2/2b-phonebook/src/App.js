@@ -6,7 +6,7 @@ import Persons from "./components/Persons";
 import Notification from "./components/Notification";
 
 const App = () => {
-  const [persons, setPersons] = useState([]);
+  const [persons, setPersons] = useState(null);
   const [newName, setNewName] = useState({
     name: "",
     number: "",
@@ -26,11 +26,18 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    if (!persons) {
+      return;
+    }
     const match = persons.filter((person) =>
       person.name.toLowerCase().includes(filterInput.toLowerCase())
     );
     setFilteredNames(match);
   }, [persons, filterInput]);
+
+  if (!persons) {
+    return;
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
