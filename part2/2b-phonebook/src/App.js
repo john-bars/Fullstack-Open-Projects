@@ -18,8 +18,6 @@ const App = () => {
     success: null,
     error: null,
   });
-  // const [successMessage, setSuccessMessage] = useState(null);
-  // const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     phoneBookService.getAll().then((initialData) => setPersons(initialData));
@@ -117,6 +115,7 @@ const App = () => {
         filteredNames={filteredNames}
         persons={persons}
         setPersons={setPersons}
+        setMessage={setMessage}
       />
     </div>
   );
