@@ -1,11 +1,24 @@
 import phoneBookService from "../services/persons";
 
-const Persons = ({ filterInput, filteredNames, persons, setPersons }) => {
+const Persons = ({
+  filterInput,
+  filteredNames,
+  persons,
+  setPersons,
+  setMessage,
+  message,
+}) => {
   const handleDelete = (person) => {
     window.confirm(`Delete ${person.name}?`) &&
-      phoneBookService
-        .remove(person.id)
-        .then(() => phoneBookService.getAll().then((res) => setPersons(res)));
+      phoneBookService.remove(person.id).catch(
+        () =>
+          setMessage({
+            ...message,
+            error: `${person.name} has already been deleted.`,
+          }),
+        setTimeout(() => setMessage(null), 5000)
+      );
+    phoneBookService.getAll().then((res) => setPersons(res));
   };
 
   return (
