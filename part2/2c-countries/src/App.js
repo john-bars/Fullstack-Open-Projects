@@ -6,21 +6,21 @@ import { useState, useEffect } from "react";
 
 function App() {
   const [countries, setCountries] = useState(null);
-  const [filterInput, setFilterInput] = useState("");
-  const [filteredCountries, setFilteredCountries] = useState([]);
+  const [filterInput, setFilterInput] = useState(null);
+  const [filteredCountries, setFilteredCountries] = useState(null);
 
   useEffect(() => {
     countriesAPI.getAll().then((res) => setCountries(res));
   }, []);
 
   useEffect(() => {
-    if (!countries) {
+    if (!countries || !filterInput) {
       return;
     }
     const filter = countries.filter(
       (country) =>
-        country.name.common.toLowerCase().includes(filterInput.toLowerCase()) ||
-        country.name.official.toLowerCase().includes(filterInput.toLowerCase())
+        country.name.common.toLowerCase().match(filterInput.toLowerCase()) ||
+        country.name.official.toLowerCase().match(filterInput.toLowerCase())
     );
     setFilteredCountries(filter);
   }, [filterInput, countries]);
@@ -32,10 +32,8 @@ function App() {
   return (
     <div>
       <SearchField setFilterInput={setFilterInput} />
-      {filterInput === "" ? (
+      {!filterInput ? (
         <Countries countries={countries} />
-      ) : filteredCountries.length > 10 ? (
-        <p>too many match, specify another filter</p>
       ) : (
         <CountryInfo filteredCountries={filteredCountries} />
       )}
