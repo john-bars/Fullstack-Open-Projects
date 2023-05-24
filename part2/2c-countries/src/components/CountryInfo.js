@@ -9,7 +9,10 @@ export default function CountryInfo({ filteredCountries }) {
     <p>too many match, specify another filter</p>
   ) : filteredCountries.length > 1 ? (
     filteredCountries.map((country) => (
-      <p key={country.cca2}>{country.name.common}</p>
+      <p key={country.cca2}>
+        {country.name.common}
+        <button onClick={() => console.log("clicked")}>show</button>
+      </p>
     ))
   ) : (
     filteredCountries.map((country) => (
